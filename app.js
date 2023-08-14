@@ -1,17 +1,21 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controller");
-
-
+const { getEndPoints } = require("./controllers/endpoints.controller");
 
 const app = express();
 
+
 app.get("/api/topics", getTopics);
+app.get("/api", getEndPoints);
+
 
 
 
 app.use((error, req, res, next) => {
     if (err.status && err.msg) {
         res.status(err.status).send({ msg: err.msg });
+    } else {
+        next(err);
     }
 });
 
