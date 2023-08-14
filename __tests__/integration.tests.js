@@ -14,10 +14,7 @@ beforeEach(() => {
 
 
 describe('GET /api/topics', () => {
-    test('"should respond with 200 upon GET /api/topics" ', () => {
-        return request(app).get("/api/topics").expect(200);
-    });
-    test("GET: 200 should respond with an array of objects", () => {
+    test("GET: 200 should respond with an array of objects upon GET /api/topics", () => {
         return request(app)
             .get("/api/topics")
             .expect(200)
@@ -37,5 +34,13 @@ describe('GET /api/topics', () => {
                 });
             });
     });
-
+    test("GET:200 should respond with array of correct length", () => {
+        return request(app)
+            .get("/api/topics")
+            .expect(200)
+            .then((response) => {
+                const topics = response.body;
+                expect(topics.length).toEqual(3);
+            });
+    });
 });
