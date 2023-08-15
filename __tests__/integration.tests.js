@@ -56,3 +56,14 @@ describe("GET: /api", () => {
             });
     });
 });
+describe('ALL /notapath', () => {
+    test('404: should respond with a 404 message if the path does not exist', () => {
+        return request(app)
+            .get("/api/something")
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not Found");
+            });
+    });
+});

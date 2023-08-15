@@ -8,6 +8,10 @@ const app = express();
 app.get("/api/topics", getTopics);
 app.get("/api", getEndPoints);
 
+app.use((req, res) => {
+    res.status(404).send({ msg: "Not Found" });
+});
+
 
 
 
