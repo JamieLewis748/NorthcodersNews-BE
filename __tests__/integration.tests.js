@@ -67,3 +67,38 @@ describe('ALL /notapath', () => {
             });
     });
 });
+describe("/api/articles/:article_id", () => {
+    test('GET: 200, should respond with an array containing a single object with given id and correct keys', () => {
+        return request(app)
+            .get("/api/articles/2")
+            .expect(200)
+            .then((response) => {
+                const { article } = response.body;
+                expect(article).toHaveProperty("author");
+                expect(article).toHaveProperty("title");
+                expect(article).toHaveProperty("article_id", 2);
+                expect(article).toHaveProperty("body");
+                expect(article).toHaveProperty("created_at");
+                expect(article).toHaveProperty("votes");
+                expect(article).toHaveProperty("article_img_url");
+            });
+    });
+    test('GET: 400, should respond with 400: Bad request if passed something other than a number as params', () => {
+        return request(app)
+            .get("/api/articles/cake4")
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test("GET: 404, should respond with 404: Not found if passed a valid parameter but it doesn't exist", () => {
+        return request(app)
+            .get("/api/articles/15")
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+});
