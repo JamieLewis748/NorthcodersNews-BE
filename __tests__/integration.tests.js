@@ -73,10 +73,10 @@ describe("/api/articles/:article_id", () => {
             .get("/api/articles/2")
             .expect(200)
             .then((response) => {
-                const article = response.body;
+                const { article } = response.body;
                 expect(article).toHaveProperty("author");
                 expect(article).toHaveProperty("title");
-                expect(article).toHaveProperty("article_id");
+                expect(article).toHaveProperty("article_id", 2);
                 expect(article).toHaveProperty("body");
                 expect(article).toHaveProperty("created_at");
                 expect(article).toHaveProperty("votes");
