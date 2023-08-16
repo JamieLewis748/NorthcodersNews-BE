@@ -181,6 +181,63 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(msg).toBe("Not found");
             });
     });
-})
+});
+describe('POST: /api/articles/:article_id/comments', () => {
+    const testObject = {
+        body: "I'm a firestarter, twisted firestarter",
+        author: "rogersop"
+    };
+    test('POST 201: should return 201, and a copy of the new object with a comment_id, timestamp and ', () => {
+        const testBody1 = { ...testObject };
+        return request(app)
+            .post("/api/articles/2/comments")
+            .send(testBody1)
+            .expect(201)
+            .then(({ body }) => {
+                const { newComment } = body;
+                console.log("🚀 ~ newComment:", newComment);
+                expect(newComment).toHaveProperty("comment_id", 19);
+                expect(newComment).toHaveProperty("body", "I'm a firestarter, twisted firestarter");
+                expect(newComment).toHaveProperty("article_id", 2);
+                expect(newComment).toHaveProperty("author", "rogersop");
+                expect(newComment).toHaveProperty("votes", 0);
+                expect(newComment).toHaveProperty("created_at");
+            });
+    });
+    test("POST: 400, returns an error 400: Bad request when attempting to enter an invalid article_id", () => {
+        const testBody2 = { ...testObject };
+        return request(app)
+            .post("/api/articles/geoff8/comments")
+            .send(testBody2)
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test("POST: 404, returns an error 404: Not found when attempting to add to an article that does not exist", () => {
+        const testBody3 = { ...testObject };
+        return request(app)
+            .post("/api/articles/23/comments")
+            .send(testBody3)
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+    test("POST: 400, returns 400: Bad request when providing no body or author", () => {
+        const testBody4 = { ...testObject };
+        return request(app)
+            .post("/api/articles/23/comments")
+            .send()
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+
+});
 
 

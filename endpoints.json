@@ -61,5 +61,29 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Submits a new comment for a specific article_id",
+    "requestBody": {
+      "description": "The comment object to be added",
+      "content": {
+        "application/json": {
+          "example": {
+            "author": "valid_user",
+            "body": "I'm a firestarter, twisted firestarter"
+          }
+        }
+      }
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "body": "I'm a firestarter, twisted firestarter",
+        "votes": 0,
+        "author": "valid_user",
+        "article_id": 2,
+        "created_at": 1679055600000
+      }
+    }
   }
 }

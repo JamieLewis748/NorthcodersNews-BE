@@ -10,5 +10,18 @@ exports.selectCommentsByArticle = (articleId) => {
     });
 };
 
+exports.addsNewCommentToArticleId = (articleId, body) => {
+    return db
+        .query(`INSERT INTO comments 
+        (body, article_id, author, votes, created_at) 
+        VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) 
+        RETURNING *`,
+            [body.body, articleId, body.author, 0])
+        .then(({ rows }) => {
+            return rows[0];
+        });
+
+}
+
 
 
