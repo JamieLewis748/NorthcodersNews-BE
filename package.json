@@ -35,11 +35,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "jest-extended/all"
-    ]
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
+      "jest-extended/all",
       "jest-sorted"
     ]
   }

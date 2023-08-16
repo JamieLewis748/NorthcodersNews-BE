@@ -135,3 +135,52 @@ describe('/api/articles', () => {
             });
     });
 });
+describe('/api/articles/:article_id/comments', () => {
+    test('GET 200: responds with an array of all comments for given article_id', () => {
+        return request(app)
+            .get("/api/articles/9/comments")
+            .expect(200)
+            .then((response) => {
+                const { comments } = response.body;
+                expect(comments.length).toBe(2);
+                comments.forEach((comment) => {
+                    expect(comment).toHaveProperty("comment_id");
+                    expect(comment).toHaveProperty("votes");
+                    expect(comment).toHaveProperty("created_at");
+                    expect(comment).toHaveProperty("author");
+                    expect(comment).toHaveProperty("body");
+                    expect(comment).toHaveProperty("article_id");
+                });
+                expect(comments).toBeSortedBy('created_at');
+            });
+    });
+    test("GET: 200, returns an empty array when given a valid article but has no comments", () => {
+        return request(app)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then((response) => {
+                const { comments } = response.body;
+                expect(comments).toEqual([]);
+            });
+    });
+    test("GET: 400, returns an error 400: Bad request when passed an invalid query", () => {
+        return request(app)
+            .get("/api/articles/dave/comments")
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test("GET: 404, returns an error 404: Not found when passed a valid query but it does not exist", () => {
+        return request(app)
+            .get("/api/articles/24/comments")
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+})
+
+
