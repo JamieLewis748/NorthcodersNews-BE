@@ -151,7 +151,7 @@ describe('/api/articles/:article_id/comments', () => {
                     expect(comment).toHaveProperty("body");
                     expect(comment).toHaveProperty("article_id");
                 });
-                expect(comments).toBeSortedBy('created_at');
+                expect(comments).toBeSortedBy('created_at', { descending: true });
             });
     });
     test("GET: 200, returns an empty array when given a valid article but has no comments", () => {
