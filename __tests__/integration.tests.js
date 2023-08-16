@@ -195,7 +195,6 @@ describe('POST: /api/articles/:article_id/comments', () => {
             .expect(201)
             .then(({ body }) => {
                 const { newComment } = body;
-                console.log("🚀 ~ newComment:", newComment);
                 expect(newComment).toHaveProperty("comment_id", 19);
                 expect(newComment).toHaveProperty("body", "I'm a firestarter, twisted firestarter");
                 expect(newComment).toHaveProperty("article_id", 2);

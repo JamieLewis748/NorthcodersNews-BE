@@ -31,7 +31,6 @@ exports.selectAllArticles = () => {
 };
 
 exports.doesArticleExist = (articleId) => {
-    console.log("in doesArticleExist");
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [articleId])
         .then(({ rows }) => {
             if (rows.length < 1) {
