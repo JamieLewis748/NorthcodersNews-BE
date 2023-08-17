@@ -326,29 +326,21 @@ describe('GET /api/users', () => {
             .get("/api/users")
             .expect(200)
             .then(({ body }) => {
-                expect(Array.isArray(body)).toBe(true);
+                const { users } = body;
+                expect(Array.isArray(users)).toBe(true);
             });
     });
     test("GET: 200 should respond with an array of data with correct keys and values", () => {
         return request(app)
             .get("/api/users")
-            .expect(200)
-            .then((response) => {
-                const topics = response.body;
-                topics.forEach((user) => {
+            .then(({ body }) => {
+                const { users } = body;
+                expect(users.length).toEqual(4);
+                users.forEach((user) => {
                     expect(user).toHaveProperty("username", expect.any(String));
                     expect(user).toHaveProperty("name", expect.any(String));
                     expect(user).toHaveProperty("avatar_url", expect.any(String));
                 });
-            });
-    });
-    test("GET:200 should respond with array of correct length", () => {
-        return request(app)
-            .get("/api/users")
-            .expect(200)
-            .then((response) => {
-                const topics = response.body;
-                expect(topics.length).toEqual(4);
             });
     });
 });
