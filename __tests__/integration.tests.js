@@ -183,12 +183,11 @@ describe('/api/articles/:article_id/comments', () => {
     });
 });
 describe('POST: /api/articles/:article_id/comments', () => {
-    const testObject = {
-        body: "I'm a firestarter, twisted firestarter",
-        author: "rogersop"
-    };
     test('POST 201: should return 201, and a copy of the new object with a comment_id, timestamp and ', () => {
-        const testBody1 = { ...testObject };
+        const testObject = {
+            body: "I'm a firestarter, twisted firestarter",
+            author: "rogersop"
+        };
         return request(app)
             .post("/api/articles/2/comments")
             .send(testBody1)
@@ -204,7 +203,10 @@ describe('POST: /api/articles/:article_id/comments', () => {
             });
     });
     test("POST: 400, returns an error 400: Bad request when attempting to enter an invalid article_id", () => {
-        const testBody2 = { ...testObject };
+        const testObject = {
+            body: "I'm a firestarter, twisted firestarter",
+            author: "rogersop"
+        };
         return request(app)
             .post("/api/articles/geoff8/comments")
             .send(testBody2)
@@ -215,7 +217,10 @@ describe('POST: /api/articles/:article_id/comments', () => {
             });
     });
     test("POST: 404, returns an error 404: Not found when attempting to add to an article that does not exist", () => {
-        const testBody3 = { ...testObject };
+        const testObject = {
+            body: "I'm a firestarter, twisted firestarter",
+            author: "rogersop"
+        };
         return request(app)
             .post("/api/articles/23/comments")
             .send(testBody3)
@@ -226,7 +231,10 @@ describe('POST: /api/articles/:article_id/comments', () => {
             });
     });
     test("POST: 400, returns 400: Bad request when providing no body or author", () => {
-        const testBody4 = { ...testObject };
+        const testObject = {
+            body: "I'm a firestarter, twisted firestarter",
+            author: "rogersop"
+        };
         return request(app)
             .post("/api/articles/23/comments")
             .send()
@@ -236,7 +244,6 @@ describe('POST: /api/articles/:article_id/comments', () => {
                 expect(msg).toBe("Bad request");
             });
     });
-
 });
 
 
