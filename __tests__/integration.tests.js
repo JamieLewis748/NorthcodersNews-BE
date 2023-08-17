@@ -134,6 +134,28 @@ describe('/api/articles', () => {
                 expect(articles).toBeSortedBy('created_at', { descending: true });
             });
     });
+    describe("FEATURE REQUEST; /api/articles (queries)", () => {
+        test("GET 200: should return an array of articles with queried topic", () => {
+            return request(app)
+                .get("/api/articles/?topic=mitch")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    articles.forEach((article) => () => {
+                        expect(article.topic).toBe('FOOTIE!');
+                    });
+                });
+        });
+        test('GET 404: should return a 404: not found error if no matches for the topic query', () => {
+            return request(app)
+                .get("/api/articles/?topic=FOOTIE!")
+                .expect(404)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe('Not found');
+                });
+        });
+    });
 });
 describe('/api/articles/:article_id/comments', () => {
     test('GET 200: responds with an array of all comments for given article_id', () => {
