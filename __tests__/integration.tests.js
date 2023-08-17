@@ -241,6 +241,55 @@ describe('POST: /api/articles/:article_id/comments', () => {
                 expect(msg).toBe("Bad request");
             });
     });
+});;
+describe('PATCH /api/articles/:article_id', () => {
+    test('PATCH: 200, should respond with updated object', () => {
+        return request(app)
+            .patch("/api/articles/3")
+            .send({ inc_votes: 35 })
+            .expect(200)
+            .then(({ body }) => {
+                const updatedArticle = body;
+                expect(updatedArticle).toHaveProperty("author", "icellusedkars");
+                expect(updatedArticle).toHaveProperty("title", "Eight pug gifs that remind me of mitch");
+                expect(updatedArticle).toHaveProperty("article_id", 3);
+                expect(updatedArticle).toHaveProperty("body", "some gifs");
+                expect(updatedArticle).toHaveProperty("topic", "mitch");
+                expect(updatedArticle).toHaveProperty("created_at");
+                expect(updatedArticle).toHaveProperty("votes", 35);
+                expect(updatedArticle).toHaveProperty("article_img_url", "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
+            });
+    });
+    test('PATCH: 404, returns an error 404: Not found when passed a valid article_id  but it does not exist', () => {
+        return request(app)
+            .patch("/api/articles/24")
+            .send({ inc_votes: 35 })
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+    test('PATCH: 400, returns 400: Bad request when passed an invalid article_id', () => {
+        return request(app)
+            .patch("/api/articles/rob")
+            .send({ inc_votes: 35 })
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test('PATCH: 400, returns 400: Bad request when passed something other than a number in inc_votes', () => {
+        return request(app)
+            .patch("/api/articles/3")
+            .send({ inc_votes: "jim" })
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
 });
 
 

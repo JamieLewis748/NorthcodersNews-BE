@@ -30,13 +30,19 @@ exports.selectAllArticles = () => {
         });
 };
 
-exports.doesArticleExist = (articleId) => {
-    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [articleId])
+
+exports.updateArticle = (articleId, inc_votes) => {
+    return db
+        .query(
+            `UPDATE articles 
+            SET votes = votes + $2
+            WHERE article_id = $1
+            RETURNING *`,
+            [articleId, inc_votes]
+        )
         .then(({ rows }) => {
-            if (rows.length < 1) {
-                return Promise.reject({ status: 404, msg: "Not found" });
-            }
-            return rows;
+            return rows[0];
         });
-}
+};
+
 

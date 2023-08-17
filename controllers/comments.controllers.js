@@ -1,12 +1,12 @@
 const { selectCommentsByArticle, addsNewCommentToArticleId } = require("../models/comments.models");
-const { doesArticleExist } = require("../models/articles.model");
+const { selectArticleById } = require("../models/articles.model");
 
 exports.getCommentsByArticle = (req, res, next) => {
     const articleId = req.params.article_id;
     const promises = [selectCommentsByArticle(articleId)];
 
     if (articleId) {
-        promises.push(doesArticleExist(articleId));
+        promises.push(selectArticleById(articleId));
     }
 
     Promise.all(promises)
@@ -27,6 +27,5 @@ exports.postNewCommentToArticleId = (req, res, next) => {
     addsNewCommentToArticleId(articleId, body)
         .then((newComment) => {
             res.status(201).send({ newComment });
-
         }).catch(next);
 };
