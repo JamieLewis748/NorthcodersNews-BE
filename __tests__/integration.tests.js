@@ -190,7 +190,7 @@ describe('POST: /api/articles/:article_id/comments', () => {
         };
         return request(app)
             .post("/api/articles/2/comments")
-            .send(testBody1)
+            .send(testObject)
             .expect(201)
             .then(({ body }) => {
                 const { newComment } = body;
@@ -209,7 +209,7 @@ describe('POST: /api/articles/:article_id/comments', () => {
         };
         return request(app)
             .post("/api/articles/geoff8/comments")
-            .send(testBody2)
+            .send(testObject)
             .expect(400)
             .then(({ body }) => {
                 const { msg } = body;
@@ -223,7 +223,7 @@ describe('POST: /api/articles/:article_id/comments', () => {
         };
         return request(app)
             .post("/api/articles/23/comments")
-            .send(testBody3)
+            .send(testObject)
             .expect(404)
             .then(({ body }) => {
                 const { msg } = body;
@@ -231,10 +231,7 @@ describe('POST: /api/articles/:article_id/comments', () => {
             });
     });
     test("POST: 400, returns 400: Bad request when providing no body or author", () => {
-        const testObject = {
-            body: "I'm a firestarter, twisted firestarter",
-            author: "rogersop"
-        };
+
         return request(app)
             .post("/api/articles/23/comments")
             .send()
