@@ -20,8 +20,24 @@ exports.addsNewCommentToArticleId = (articleId, body) => {
         .then(({ rows }) => {
             return rows[0];
         });
+};
 
+
+exports.removeComment = (commentId) => {
+    return db
+        .query(`DELETE FROM comments
+                WHERE comment_id = $1`,
+            [commentId]);
+};
+
+exports.getCommentById = (commentId) => {
+    return db.query(`SELECT * FROM comments 
+                    WHERE comment_id = $1`, [commentId])
+        .then(({ rows }) => {
+            if (rows.length < 1) {
+                return Promise.reject({ err: 404, msg: "Not found" });
+            }
+            return rows;
+        });
 }
-
-
 

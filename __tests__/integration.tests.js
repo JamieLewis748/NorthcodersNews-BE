@@ -231,7 +231,6 @@ describe('POST: /api/articles/:article_id/comments', () => {
             });
     });
     test("POST: 400, returns 400: Bad request when providing no body or author", () => {
-
         return request(app)
             .post("/api/articles/23/comments")
             .send()
@@ -291,5 +290,37 @@ describe('PATCH /api/articles/:article_id', () => {
             });
     });
 });
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test("204: Returns 204 and no content on successful delete", () => {
+        return request(app)
+            .delete("/api/comments/3")
+            .expect(204)
+            .then(() => db.query("SELECT * FROM comments WHERE comment_id = 3"))
+            .then(({ rows }) => {
+                expect(rows.length).toBe(0);
+            });
+    });
+    test("400: Returns 400: Bad Request when passed an invalid parameter", () => {
+        return request(app)
+            .delete("/api/comments/hello")
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test("404: Returns 404: Not found when passed a valid param, but does not exist", () => {
+        return request(app)
+            .delete("/api/comments/23")
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+});
+
+
 
 
