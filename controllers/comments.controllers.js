@@ -32,14 +32,8 @@ exports.postNewCommentToArticleId = (req, res, next) => {
 
 exports.deleteCommentById = (req, res, next) => {
     const commentId = req.params.comment_id;
-    console.log("🚀 ~ commentId:", commentId);
-    const promises = [removeComment(commentId),];
+    const promises = [removeComment(commentId), getCommentById(commentId)];
 
-    if (commentId) {
-        promises.push(getCommentById(commentId));
-    } else {
-        return res.send(400).send({ msg: "bad request" });
-    }
     Promise.all(promises)
         .then(() => {
             res.status(204).send();
