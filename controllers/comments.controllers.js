@@ -1,4 +1,4 @@
-const { selectCommentsByArticle, addsNewCommentToArticleId } = require("../models/comments.models");
+const { selectCommentsByArticle, addsNewCommentToArticleId, removeComment, getCommentById } = require("../models/comments.models");
 const { selectArticleById } = require("../models/articles.model");
 
 exports.getCommentsByArticle = (req, res, next) => {
@@ -27,5 +27,15 @@ exports.postNewCommentToArticleId = (req, res, next) => {
     addsNewCommentToArticleId(articleId, body)
         .then((newComment) => {
             res.status(201).send({ newComment });
+        }).catch(next);
+};
+
+exports.deleteCommentById = (req, res, next) => {
+    const commentId = req.params.comment_id;
+    const promises = [removeComment(commentId), getCommentById(commentId)];
+
+    Promise.all(promises)
+        .then(() => {
+            res.status(204).send();
         }).catch(next);
 };

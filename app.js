@@ -14,11 +14,9 @@ app.get("/api", getEndPoints);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticle);
-
-app.patch("/api/articles/:article_id", patchArticle);
-
 app.post("/api/articles/:article_id/comments", postNewCommentToArticleId);
-
+app.patch("/api/articles/:article_id", patchArticle);
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.use((req, res) => {
     res.status(404).send({ msg: "Not Found" });
