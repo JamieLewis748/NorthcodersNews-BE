@@ -103,6 +103,17 @@ describe("/api/articles/:article_id", () => {
                 expect(msg).toBe("Not found");
             });
     });
+    describe("FEATURE: GET /api/articles/:article_id (comment_count)", () => {
+        test('GET: 200, should respond with an array containing a single object with given id and correct keys', () => {
+            return request(app)
+                .get("/api/articles/2")
+                .expect(200)
+                .then((response) => {
+                    const { article } = response.body;
+                    expect(article).toHaveProperty("comment_count");
+                });
+        });
+    });
 });
 describe('/api/articles', () => {
     test('GET: 200, responds with an array of article objects of correct length, with correct properties ', () => {
