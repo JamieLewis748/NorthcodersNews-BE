@@ -141,8 +141,8 @@ describe('/api/articles', () => {
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body;
-                    articles.forEach((article) => () => {
-                        expect(article.topic).toBe('FOOTIE!');
+                    articles.forEach((article) => {
+                        expect(article.topic).toBe('mitch');
                     });
                 });
         });
@@ -173,8 +173,40 @@ describe('/api/articles', () => {
                     expect(msg).toBe("Bad request, invalid sort query");
                 });
         });
+        test('ORDER: 200, returns articles in ascending order when queried', () => {
+            return request(app)
+                .get("/api/articles?order=asc")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("created_at");
+                });
+        });
+        test('ORDER: 400, returns bad request when provided an invalid order query', () => {
+            return request(app)
+                .get("/api/articles?order=yesplease")
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("Bad request, invalid order query");
+                });
+        });
+        test('TOPIC, ORDER and SORT', () => {
+            return request(app)
+                .get("/api/articles?topic=mitch&sort_by=article_id&order=asc")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("article_id");
+                    articles.forEach((article) => () => {
+                        console.log("🚀 ~ article:", article);
+                        expect(article.topic).toBe('mitch');
+                    });
+                });
+        });
     });
 });
+
 describe('/api/articles/:article_id/comments', () => {
     test('GET 200: responds with an array of all comments for given article_id', () => {
         return request(app)

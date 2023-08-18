@@ -11,9 +11,13 @@ exports.selectArticleById = (articleId) => {
 
 exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
     const acceptedSortQueries = ["article_id", "title", "topic", "author", "created_at", "votes", "article_img_url"];
+    const acceptedOrders = ["asc", "desc"];
 
     if (!acceptedSortQueries.includes(sort_by)) {
         return Promise.reject({ status: 400, msg: "Bad request, invalid sort query" });
+    }
+    if (!acceptedOrders.includes(order)) {
+        return Promise.reject({ status: 400, msg: "Bad request, invalid order query" });
     }
 
     let queryString = `SELECT 
