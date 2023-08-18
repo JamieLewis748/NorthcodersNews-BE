@@ -227,7 +227,7 @@ describe('/api/articles', () => {
     });
 });
 
-describe('/api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
     test('GET 200: responds with an array of all comments for given article_id', () => {
         return request(app)
             .get("/api/articles/9/comments")
@@ -436,7 +436,28 @@ describe('GET /api/users', () => {
             });
     });
 });
-
+describe("GET /api/users/:username", () => {
+    test('200: should respond with 200 and a user object with correct properties', () => {
+        return request(app)
+            .get("/api/users/icellusedkars")
+            .expect(200)
+            .then(({ body }) => {
+                const { user } = body;
+                expect(user).toHaveProperty("username", "icellusedkars");
+                expect(user).toHaveProperty("avatar_url", "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4");
+                expect(user).toHaveProperty("name", "sam");
+            });
+    });
+    test("404: should respond with 404: Not found when passed a username that does not exist", () => {
+        return request(app)
+            .get("/api/users/99problemsbaba1")
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+})
 
 
 
