@@ -110,7 +110,7 @@ describe("/api/articles/:article_id", () => {
                 .expect(200)
                 .then((response) => {
                     const { article } = response.body;
-                    expect(article).toHaveProperty("comment_count");
+                    expect(article).toHaveProperty("comment_count", 0);
                 });
         });
     });

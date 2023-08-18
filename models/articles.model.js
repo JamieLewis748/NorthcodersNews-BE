@@ -3,7 +3,7 @@ const db = require("../db/connection");
 exports.selectArticleById = (articleId) => {
     return db
         .query(`SELECT articles.*,
-                COUNT(comments.comment_id) AS comment_count
+                CAST(COUNT(comments.comment_id) AS INT) AS comment_count
                 FROM articles
                 LEFT JOIN comments ON articles.article_id = comments.article_id
                 WHERE articles.article_id = $1
@@ -36,7 +36,7 @@ exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
         articles.created_at,
         articles.votes,
         articles.article_img_url,
-        COUNT(comments.comment_id) AS comment_count
+        CAST(COUNT(comments.comment_id) AS INT) AS comment_count
         FROM articles
         LEFT JOIN comments ON articles.article_id = comments.article_id`;
 
