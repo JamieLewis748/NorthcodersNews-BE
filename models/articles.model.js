@@ -9,9 +9,18 @@ exports.selectArticleById = (articleId) => {
     });
 };
 
-exports.selectAllArticles = () => {
-    return db
-        .query(`SELECT 
+exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
+    const acceptedSortQueries = ["article_id", "title", "topic", "author", "created_at", "votes", "article_img_url"];
+    const acceptedOrders = ["asc", "desc"];
+
+    if (!acceptedSortQueries.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: "Bad request, invalid sort query" });
+    }
+    if (!acceptedOrders.includes(order)) {
+        return Promise.reject({ status: 400, msg: "Bad request, invalid order query" });
+    }
+
+    let queryString = `SELECT 
         articles.article_id,
         articles.title,
         articles.topic,
@@ -21,14 +30,26 @@ exports.selectAllArticles = () => {
         articles.article_img_url,
         COUNT(comments.comment_id) AS comment_count
     FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY
+    LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+    if (topic) {
+        queryString += ` WHERE articles.topic = '${topic}'`;
+    }
+
+    queryString += ` GROUP BY
         articles.article_id
-    ORDER BY articles.created_at DESC`)
+    ORDER BY ${sort_by} ${order}`;
+
+    return db
+        .query(queryString)
         .then(({ rows }) => {
+            if (rows.length < 1) {
+                return [];
+            }
             return rows;
         });
 };
+
 
 
 exports.updateArticle = (articleId, inc_votes) => {
@@ -41,7 +62,7 @@ exports.updateArticle = (articleId, inc_votes) => {
             [articleId, inc_votes]
         )
         .then(({ rows }) => {
-            if (!rows) {
+            if (rows.length < 1) {
                 return Promise.reject({ status: 404, msg: "Not found" });
             }
             return rows[0];

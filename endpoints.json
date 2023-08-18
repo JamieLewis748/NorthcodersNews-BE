@@ -31,7 +31,11 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": [],
+    "queries": [
+      "topic",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -86,6 +90,29 @@
       }
     }
   },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates number of votes for specific article_id",
+    "requestBody": {
+      "description": "The number of votes to be updated by",
+      "content": {
+        "application/json": {
+          "example": {
+            "inc_votes": "newVotes"
+          }
+        }
+      }
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "body": "I'm a firestarter, twisted firestarter",
+        "votes": 4,
+        "author": "valid_user",
+        "article_id": 2,
+        "created_at": 1679055600000
+      }
+    }
+  },
   "GET /api/users": {
     "description": "serves an array of all users",
     "queries": [],
@@ -98,5 +125,10 @@
         }
       ]
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes comment by specific comment id",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

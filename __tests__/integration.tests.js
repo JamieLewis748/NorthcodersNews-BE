@@ -134,7 +134,88 @@ describe('/api/articles', () => {
                 expect(articles).toBeSortedBy('created_at', { descending: true });
             });
     });
+    describe("FEATURE REQUEST; /api/articles (queries)", () => {
+        test("TOPIC: 200, should return an array of articles with queried topic", () => {
+            return request(app)
+                .get("/api/articles?topic=mitch")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    articles.forEach((article) => {
+                        expect(article.topic).toBe('mitch');
+                    });
+                });
+        });
+        test("TOPIC: 200, should return an empty array when passed an topic which exists but has no articles", () => {
+            return request(app)
+                .get("/api/articles?topic=paper")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toEqual([]);
+                });
+        });
+
+        test('TOPIC: 404, should return a 404: not found error if no matches for the topic query', () => {
+            return request(app)
+                .get("/api/articles?topic=FOOTIE!")
+                .expect(404)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe('Not found');
+                });
+        });
+        test('SORT_BY: 200, returns articles sorted by queried column', () => {
+            return request(app)
+                .get("/api/articles?sort_by=author")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("author", { descending: true });
+                });
+        });
+        test('SORT_BY: 400, returns bad request when provided an invalid sort_by query', () => {
+            return request(app)
+                .get("/api/articles?sort_by=beers")
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("Bad request, invalid sort query");
+                });
+        });
+        test('ORDER: 200, returns articles in ascending order when queried', () => {
+            return request(app)
+                .get("/api/articles?order=asc")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("created_at");
+                });
+        });
+        test('ORDER: 400, returns bad request when provided an invalid order query', () => {
+            return request(app)
+                .get("/api/articles?order=yesplease")
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("Bad request, invalid order query");
+                });
+        });
+        test('TOPIC, ORDER and SORT', () => {
+            return request(app)
+                .get("/api/articles?topic=mitch&sort_by=article_id&order=asc")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("article_id");
+                    articles.forEach((article) => () => {
+                        expect(article.topic).toBe('mitch');
+                    });
+                });
+        });
+    });
 });
+
 describe('/api/articles/:article_id/comments', () => {
     test('GET 200: responds with an array of all comments for given article_id', () => {
         return request(app)
