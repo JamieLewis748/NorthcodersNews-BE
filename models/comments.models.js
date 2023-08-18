@@ -39,5 +39,18 @@ exports.getCommentById = (commentId) => {
             }
             return rows;
         });
-}
+};
 
+exports.updateComment = (commentId, inc_votes) => {
+    return db
+        .query(
+            `UPDATE comments 
+        SET votes = votes + $2
+        WHERE comment_id = $1
+        RETURNING *`,
+            [commentId, inc_votes]
+        )
+        .then(({ rows }) => {
+            return rows[0];
+        });
+};

@@ -1,4 +1,4 @@
-const { selectCommentsByArticle, addsNewCommentToArticleId, removeComment, getCommentById } = require("../models/comments.models");
+const { selectCommentsByArticle, addsNewCommentToArticleId, removeComment, getCommentById, updateComment } = require("../models/comments.models");
 const { selectArticleById } = require("../models/articles.model");
 
 exports.getCommentsByArticle = (req, res, next) => {
@@ -38,4 +38,16 @@ exports.deleteCommentById = (req, res, next) => {
         .then(() => {
             res.status(204).send();
         }).catch(next);
+};
+
+exports.patchComment = (req, res, next) => {
+    const commentId = req.params.comment_id;
+    const { inc_votes } = req.body;
+
+    const promises = [updateComment(commentId, inc_votes), getCommentById(commentId)];
+
+    Promise.all(promises).then((resolvedPromises) => {
+        const newComment = resolvedPromises[0];
+        res.status(200).send(newComment);
+    }).catch(next);
 };

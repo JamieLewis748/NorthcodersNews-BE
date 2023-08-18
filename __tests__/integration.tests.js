@@ -457,7 +457,49 @@ describe("GET /api/users/:username", () => {
                 expect(msg).toBe("Not found");
             });
     });
-})
+});
+describe('PATCH /api/comments/:comment_id', () => {
+    test('PATCH: 200, should respond with updated comment object', () => {
+        return request(app)
+            .patch("/api/comments/1")
+            .send({ inc_votes: 14 })
+            .expect(200)
+            .then(({ body }) => {
+                const updatedComment = body;
+                expect(updatedComment.votes).toBe(30);
+            });
+    });
+    test('PATCH: 404, returns an error 404: Not found when passed a valid comment_id  but it does not exist', () => {
+        return request(app)
+            .patch("/api/comments/24")
+            .send({ inc_votes: 35 })
+            .expect(404)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Not found");
+            });
+    });
+    test('PATCH: 400, returns 400: Bad request when passed an invalid comment_id', () => {
+        return request(app)
+            .patch("/api/comments/rob")
+            .send({ inc_votes: 35 })
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+    test('PATCH: 400, returns 400: Bad request when passed something other than a number in inc_votes', () => {
+        return request(app)
+            .patch("/api/comments/3")
+            .send({ inc_votes: "jim" })
+            .expect(400)
+            .then(({ body }) => {
+                const { msg } = body;
+                expect(msg).toBe("Bad request");
+            });
+    });
+});
 
 
 

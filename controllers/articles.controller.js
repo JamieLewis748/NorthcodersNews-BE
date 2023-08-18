@@ -26,11 +26,8 @@ exports.patchArticle = (req, res, next) => {
     const articleId = req.params.article_id;
     const { inc_votes } = req.body;
 
-    const promises = [updateArticle(articleId, inc_votes)];
+    const promises = [updateArticle(articleId, inc_votes), selectArticleById(articleId)];
 
-    if (articleId) {
-        promises.push(selectArticleById(articleId));
-    }
     Promise.all(promises).then((resolvedPromises) => {
         const newArticle = resolvedPromises[0];
         res.status(200).send(newArticle);
