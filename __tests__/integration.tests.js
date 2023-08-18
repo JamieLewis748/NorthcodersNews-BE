@@ -146,6 +146,16 @@ describe('/api/articles', () => {
                     });
                 });
         });
+        test("TOPIC: 200, should return an empty array when passed an topic which exists but has no articles", () => {
+            return request(app)
+                .get("/api/articles?topic=paper")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toEqual([]);
+                });
+        });
+
         test('TOPIC: 404, should return a 404: not found error if no matches for the topic query', () => {
             return request(app)
                 .get("/api/articles?topic=FOOTIE!")
@@ -199,7 +209,6 @@ describe('/api/articles', () => {
                     const { articles } = body;
                     expect(articles).toBeSortedBy("article_id");
                     articles.forEach((article) => () => {
-                        console.log("🚀 ~ article:", article);
                         expect(article.topic).toBe('mitch');
                     });
                 });

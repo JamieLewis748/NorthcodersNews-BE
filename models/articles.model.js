@@ -44,7 +44,7 @@ exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
         .query(queryString)
         .then(({ rows }) => {
             if (rows.length < 1) {
-                return Promise.reject({ status: 404, msg: "Not found" });
+                return [];
             }
             return rows;
         });
@@ -62,7 +62,7 @@ exports.updateArticle = (articleId, inc_votes) => {
             [articleId, inc_votes]
         )
         .then(({ rows }) => {
-            if (!rows) {
+            if (rows.length < 1) {
                 return Promise.reject({ status: 404, msg: "Not found" });
             }
             return rows[0];
