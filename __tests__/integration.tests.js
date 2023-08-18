@@ -135,9 +135,9 @@ describe('/api/articles', () => {
             });
     });
     describe("FEATURE REQUEST; /api/articles (queries)", () => {
-        test("GET 200: should return an array of articles with queried topic", () => {
+        test("TOPIC: 200, should return an array of articles with queried topic", () => {
             return request(app)
-                .get("/api/articles/?topic=mitch")
+                .get("/api/articles?topic=mitch")
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body;
@@ -146,13 +146,31 @@ describe('/api/articles', () => {
                     });
                 });
         });
-        test('GET 404: should return a 404: not found error if no matches for the topic query', () => {
+        test('TOPIC: 404, should return a 404: not found error if no matches for the topic query', () => {
             return request(app)
-                .get("/api/articles/?topic=FOOTIE!")
+                .get("/api/articles?topic=FOOTIE!")
                 .expect(404)
                 .then(({ body }) => {
                     const { msg } = body;
                     expect(msg).toBe('Not found');
+                });
+        });
+        test('SORT_BY: 200, returns articles sorted by queried column', () => {
+            return request(app)
+                .get("/api/articles?sort_by=author")
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy("author", { descending: true });
+                });
+        });
+        test('SORT_BY: 400, returns bad request when provided an invalid sort_by query', () => {
+            return request(app)
+                .get("/api/articles?sort_by=beers")
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("Bad request, invalid sort query");
                 });
         });
     });

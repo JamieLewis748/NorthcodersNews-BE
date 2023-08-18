@@ -9,7 +9,12 @@ exports.selectArticleById = (articleId) => {
     });
 };
 
-exports.selectAllArticles = (topic) => {
+exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
+    const acceptedSortQueries = ["article_id", "title", "topic", "author", "created_at", "votes", "article_img_url"];
+
+    if (!acceptedSortQueries.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: "Bad request, invalid sort query" });
+    }
 
     let queryString = `SELECT 
         articles.article_id,
@@ -29,7 +34,7 @@ exports.selectAllArticles = (topic) => {
 
     queryString += ` GROUP BY
         articles.article_id
-    ORDER BY created_at DESC`;
+    ORDER BY ${sort_by} ${order}`;
 
     return db
         .query(queryString)
