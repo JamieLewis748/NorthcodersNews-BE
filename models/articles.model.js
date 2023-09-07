@@ -18,7 +18,7 @@ exports.selectArticleById = (articleId) => {
 };
 
 exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'desc') => {
-    const acceptedSortQueries = ["article_id", "title", "topic", "author", "created_at", "votes", "article_img_url"];
+    const acceptedSortQueries = ["article_id", "title", "topic", "author", "created_at", "votes", "article_img_url", "comment_count"];
     const acceptedOrders = ["asc", "desc"];
 
     if (!acceptedSortQueries.includes(sort_by)) {
