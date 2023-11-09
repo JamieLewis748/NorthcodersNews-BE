@@ -1,4 +1,4 @@
-const { selectAllUsers, selectUserByUsername } = require("../models/users.model.js");
+const { selectAllUsers, selectUserByEmail, createUserByEmail } = require("../models/users.model.js");
 
 
 exports.getAllUsers = (req, res, next) => {
@@ -9,9 +9,19 @@ exports.getAllUsers = (req, res, next) => {
 };
 
 
-exports.getUserByUsername = (req, res, next) => {
-    const { username } = req.params;
-    selectUserByUsername(username).then((user) => {
+exports.getUserByEmail = (req, res, next) => {
+    const { email } = req.params;
+    selectUserByEmail(email).then((user) => {
         res.status(200).send({ user });
     }).catch(next);
 };
+
+exports.postNewUser = (req, res, next) => {
+    const {body} = req.body;
+const {username, name, email, avatar_url} = body
+
+createUserByEmail(username, name, email, avatar_url)
+    .then((newUser) => {
+        res.status(201).send({ newUser });
+    }).catch(next);
+}

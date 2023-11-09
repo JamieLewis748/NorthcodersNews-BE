@@ -436,16 +436,17 @@ describe('GET /api/users', () => {
             });
     });
 });
-describe("GET /api/users/:username", () => {
+describe("GET /api/users/:email", () => {
     test('200: should respond with 200 and a user object with correct properties', () => {
         return request(app)
-            .get("/api/users/icellusedkars")
+            .get("/api/users/sam@sam.com")
             .expect(200)
             .then(({ body }) => {
                 const { user } = body;
                 expect(user).toHaveProperty("username", "icellusedkars");
                 expect(user).toHaveProperty("avatar_url", "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4");
                 expect(user).toHaveProperty("name", "sam");
+                expect(user).toHaveProperty("email", "sam@sam.com")
             });
     });
     test("404: should respond with 404: Not found when passed a username that does not exist", () => {
@@ -500,6 +501,88 @@ describe('PATCH /api/comments/:comment_id', () => {
             });
     });
 });
-
-
+// describe('POST /api/articles', () => {
+//     test('POST 201: should return 201, and a copy of the new object with a comment_id, timestamp and ', () => {
+//         const testObject = {
+//             body: "I'm a firestarter, twisted firestarter",
+//             author: "rogersop"
+//         };
+//         return request(app)
+//             .post("/api/articles/2/comments")
+//             .send(testObject)
+//             .expect(201)
+//             .then(({ body }) => {
+//                 const { newComment } = body;
+//                 expect(newComment).toHaveProperty("comment_id", 19);
+//                 expect(newComment).toHaveProperty("body", "I'm a firestarter, twisted firestarter");
+//                 expect(newComment).toHaveProperty("article_id", 2);
+//                 expect(newComment).toHaveProperty("author", "rogersop");
+//                 expect(newComment).toHaveProperty("votes", 0);
+//                 expect(newComment).toHaveProperty("created_at");
+//             });
+//     });
+//     test("POST: 400, returns an error 400: Bad request when attempting to enter an invalid article_id", () => {
+//         const testObject = {
+//             body: "I'm a firestarter, twisted firestarter",
+//             author: "rogersop"
+//         };
+//         return request(app)
+//             .post("/api/articles/geoff8/comments")
+//             .send(testObject)
+//             .expect(400)
+//             .then(({ body }) => {
+//                 const { msg } = body;
+//                 expect(msg).toBe("Bad request");
+//             });
+//     });
+//     test("POST: 404, returns an error 404: Not found when attempting to add to an article that does not exist", () => {
+//         const testObject = {
+//             body: "I'm a firestarter, twisted firestarter",
+//             author: "rogersop"
+//         };
+//         return request(app)
+//             .post("/api/articles/23/comments")
+//             .send(testObject)
+//             .expect(404)
+//             .then(({ body }) => {
+//                 const { msg } = body;
+//                 expect(msg).toBe("Not found");
+//             });
+//     });
+//     test("POST: 400, returns 400: Bad request when providing no body or author", () => {
+//         return request(app)
+//             .post("/api/articles/23/comments")
+//             .send()
+//             .expect(400)
+//             .then(({ body }) => {
+//                 const { msg } = body;
+//                 expect(msg).toBe("Bad request");
+//             });
+//     });
+// });
+describe('POST  /api/users', () => {
+    test('should return 201 and copy of user object', () => {
+        const testObject = {
+            body: {
+                username: 'jimbob',
+                name: 'hellsyeah',
+                email: 'jim@bob.com',
+                avatar_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+            },
+        };
+        return request(app)
+            .post("/api/users")
+            .send(testObject)
+            .expect(201)
+            .then(({ body }) => {
+                console.log("🚀 ~ body:", body);
+                const { newUser } = body;
+                expect(newUser).toHaveProperty("username", 'jimbob');
+                expect(newUser).toHaveProperty("name", "hellsyeah");
+                expect(newUser).toHaveProperty("email", 'jim@bob.com');
+                expect(newUser).toHaveProperty("avatar_url", 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png');
+            });
+    });
+})
 
