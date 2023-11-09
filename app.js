@@ -4,7 +4,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const { getEndPoints } = require("./controllers/endpoints.controller");
 const { getArticleById, getAllArticles, patchArticle } = require("./controllers/articles.controller");
 const { getCommentsByArticle, postNewCommentToArticleId, deleteCommentById, patchComment } = require("./controllers/comments.controllers");
-const { getAllUsers, getUserByUsername } = require("./controllers/users.controller");
+const { getAllUsers, getUserByEmail, postNewUser } = require("./controllers/users.controller");
 
 
 const app = express();
@@ -23,7 +23,10 @@ app.delete("/api/comments/:comment_id", deleteCommentById);
 app.patch("/api/articles/:article_id", patchArticle);
 app.patch("/api/comments/:comment_id", patchComment);
 app.get("/api/users", getAllUsers);
-app.get("/api/users/:username", getUserByUsername);
+app.get("/api/users/:email", getUserByEmail);
+app.post("/api/users", postNewUser);
+// app.post("/api/topics", postNewTopic);
+// app.post("/api/articles", postNewArticle);
 
 app.use((req, res) => {
     res.status(404).send({ msg: "Not Found" });
