@@ -143,5 +143,8 @@
     "description": "removes comment by specific comment id",
     "queries": [],
     "exampleResponse": {}
-  }
+  },
+  "PATCH /api/comments/:comment_id": {}
+
+
 }
